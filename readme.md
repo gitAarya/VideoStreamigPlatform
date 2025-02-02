@@ -1,1 +1,1 @@
-# this is a video streamign platform learning and coding
+# this is a video streaming platform learning and coding
