@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from "becrypt";
+import bcrypt from "bcrypt";
 const UserSchema= new mongoose.Schema( 
     {
         watchHistory:[
@@ -11,7 +11,7 @@ const UserSchema= new mongoose.Schema(
               }
         ],
         username:{
-            type:string,
+            type:String,
             required:true,
             unique:true,
             lowercase:true,
@@ -35,8 +35,8 @@ const UserSchema= new mongoose.Schema(
         required:true,
         },
         coverImage:{
-            type:string,//cloudnary url
-            required:true,
+            type:String,//cloudnary url
+            
 
         },
         password:{
@@ -52,7 +52,7 @@ const UserSchema= new mongoose.Schema(
 )
 UserSchema.pre("save",async function (next) {
     if(!this.isModified("password")) return next()
-        this.password=bcrypt.hash(this.password,10)    
+        this.password= await bcrypt.hash(this.password,10)    
     next()
 })
 
