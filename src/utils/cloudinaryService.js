@@ -20,6 +20,8 @@ cloudinary.config({
         return response;
         
     } catch (error) {
+      console.error("Cloudinary upload error:", error);
+
       fs.unlinkSync(LocaFilePath)// remove the locally saved file as the upload opeartion got failed
       return null;
 
