@@ -227,7 +227,7 @@ const changeCurrentPassword=asyncHandler(async (req,res)=>{
 const getCurrentUser=asyncHandler(async (req,res)=>{
     return res
     .status(200)
-    .json( new apiResponse(200,req.user,"current user fetched successfully"))
+    .json( new apiResponse(200,user,"current user fetched successfully"))
 
 
 })
@@ -276,7 +276,7 @@ const updateUserAvatar=asyncHandler(async (req,res)=>{
 
 })
 const updateUserCover=asyncHandler(async(req,res)=>{
-    const coverImageLocalpath=req.files?.cover[0]?.path
+    const coverImageLocalpath=req.file?.path
     if(!coverImageLocalpath){
         throw new apiError(400,"cover local path not available")
     }
