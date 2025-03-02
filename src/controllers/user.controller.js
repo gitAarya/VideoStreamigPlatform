@@ -311,6 +311,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-
-
-updateUserCover}
+    updateUserCover,
+    
+}
