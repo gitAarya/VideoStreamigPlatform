@@ -15,12 +15,13 @@ const playListSchema=new Schema(
             {
             type:mongoose.Schema.Types.ObjectId,
             ref:"Video"
-        },
+        }
+    ],
         owners:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
         }
-    ]
+    
     }
     ,{timestamps:true})
 
