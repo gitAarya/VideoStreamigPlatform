@@ -1,5 +1,5 @@
 import {v2 as cloudinary} from "cloudinary";
-import { log } from "console";
+import { error, log } from "console";
 import fs from "fs";
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,6 +17,14 @@ cloudinary.config({
         })
         //file has been uploades succccessfully 
         console.log("file is uploaded on the cloudinaey",response.url);
+        fs.unlink(LocaFilePath, (err) => {
+          if (err) {
+              console.error("Error deleting local file:", err);
+          } else {
+              console.log("File deleted from local storage:", LocaFilePath);
+          }
+      });
+      
         return response;
         
     } catch (error) {
@@ -29,4 +37,12 @@ cloudinary.config({
     }
 
   }
-  export {UploadOnCloudinary}
+  const deleteFromCloudinary = async (publicId) => {
+    try {
+        await cloudinary.uploader.destroy(publicId, { resource_type: "video" });
+        console.log("Old file deleted from Cloudinary.");
+    } catch (error) {
+        console.error("Error deleting file:", error);
+    }
+};
+  export {UploadOnCloudinary,deleteFromCloudinary}
