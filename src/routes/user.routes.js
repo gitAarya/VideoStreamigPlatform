@@ -23,8 +23,8 @@ import { verifyJWT } from "../middleware/auth.middleware.js";
 router.route("/login").post(loginUser)
 //secured routes
 router.route("/logout").post(verifyJWT,LogOutUser)
-router.route("/refresh-token").post(refeshAccessToken)
-router.route("/change-password").post(verifyJWT,changeCurrentPassword)
+router.route("/refreshToken").post(refeshAccessToken)
+router.route("/changePassword").post(verifyJWT,changeCurrentPassword)
 router.route("/CurrentUser").get(verifyJWT,getCurrentUser)
 router.route("/updateAccDetails").patch(verifyJWT,updateAccountDetails)
 
