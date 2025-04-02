@@ -14,11 +14,15 @@ const getAllVideos = asyncHandler(async (req, res) => {
     // Convert page & limit to numbers
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
+    // console.log(query);
+    
 
     // Build filter query
     const filter = {};
     if (userId) filter.userId = userId;
-    if (query) filter.title = { $regex: query, $options: "i" }; // Case-insensitive search
+    if (query) filter.title = { $regex: query, $options: "i" };
+    console.log(typeof(filter));
+     // Case-insensitive search
 
     // Sorting configuration
     const sort = { [sortBy]: sortType === "desc" ? -1 : 1 };
