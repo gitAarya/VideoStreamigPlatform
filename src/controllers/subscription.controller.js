@@ -6,7 +6,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/ApiResponse.js";
 
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { subscribe } from "diagnostics_channel";
+import { channel, subscribe } from "diagnostics_channel";
 
 const toggleSubscription= asyncHandler(async (req,res)=>{
     const {channelId} = req.params
@@ -102,6 +102,44 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
     const { subscriberId } = req.params
+    if(!subscriberId) throw new apiError(400,"subscriberID required")
+    
+    const subscriber=await User.findById(subscriberId)
+    if(!subscriber) throw new apiError(404,"User not found")
+    
+    const subscribedTo=await Subscription.aggregate([
+        {
+            $match:{
+                subscriber: new mongoose.Types.ObjectId(subscriberId)
+            }
+        },
+        {
+            $lookup:{
+                localField:"channel",
+                from:"users",
+                foreignField:"_id",
+                as:"subscrbedChannels"
+            }
+        },
+        {
+            $unwind:"$subscrbedChannels"
+        },
+        {
+            $project:{
+                _id:0,
+                username:"$subscrbedChannels.username",
+                avatar:"$subscrbedChannels.avatar",
+                channelID:"$subscrbedChannels._id"
+            }
+        }
+    ])
+    if(!subscribedTo.length) throw new apiError(404,"channels not found")
+
+    return res
+    .status(200)
+    .json(
+        new apiResponse(200,subscribedTo,"Subscribed channel fetched successfully")
+    )
 })
 
 export {
