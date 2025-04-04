@@ -20,6 +20,7 @@ app.use(cookieParser())
  import tweetRouter from "./routes/tweet.routes.js"
  import subscriptionRouter from "./routes/subscription.routes.js"
  import commentRoute from "./routes/comment.routes.js"
+ import playlistRouter from "./routes/playlist.routes.js"
 
 
 
@@ -29,7 +30,7 @@ app.use(cookieParser())
  app.use("/api/v1/tweets", tweetRouter)
  app.use("/api/v1/subscriptions", subscriptionRouter)
  app.use("/api/v1/comments",commentRoute)
-
+app.use("/api/v1/playlist",playlistRouter)
  
  //http://localhost:5000/api/v1/user/register
 export {app}
