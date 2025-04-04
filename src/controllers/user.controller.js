@@ -386,120 +386,53 @@ return res
 
 })
 
-// const getUserWatchHIstory=asyncHandler(async(req,res)=>{
-//   if (! req.user._id){
-//     throw new apiError(400,"user not found")
-//   }
-//     const user=await User.aggregate([
-//         {
-//             $match:{
-//                 _id: new mongoose.Types.ObjectId(req.user._id)
-//             }
-//         },{
-//               $unwind: "$watchHistory"
-//         },
-//         {
-//             $lookup:{
-//                 from:"videos",
-//                 localField:"watchHistory",
-//                 foreignField:"_id",
-//                 as:"watchHistory",
-//                 pipeline:[
-//                     {
-//                         $lookup:{
-//                             from:"users",
-//                             localField:"owner",
-//                             foreignField:"_id",
-//                             as:"owner",
-//                             pipeline:[
-//                                 {
-//                                     $project:{
-//                                         fullName:1,
-//                                         username:1,
-//                                         avatar:1
-//                                     }
-//                                 }
-//                             ]
-//                         }
-//                     },{
-//                         $addFields:{
-//                             owner:{
-//                                 $first:"$owner"
-//                             }
-//                         }
-//                     }
-//                 ]
-                
-//             }
-//         },{
-//             $unwind: "$watchHistory" 
-//         },
-//         {
-//             $group: {
-//                 _id: "$_id",
-//                 watchHistory: { $push: "$watchHistory" }
-//             }
-//         }
-//     ])
-//     return res
-//     .status(200)
-//     .json( new apiResponse(200,user[0].watchHistory,"watch history fetched successfully"))
-// })
-const getUserWatchHIstory = asyncHandler(async (req, res) => {
-    if (!req.user?._id) {
-        throw new apiError(400, "User not found!");
-    }
-
-    const user = await User.aggregate([
+const getUserWatchHIstory=asyncHandler(async(req,res)=>{
+  if (! req.user._id){
+    throw new apiError(400,"user not found")
+  }
+    const user=await User.aggregate([
         {
-            $match: {
+            $match:{
                 _id: new mongoose.Types.ObjectId(req.user._id)
             }
+        },{
+              $unwind: "$watchHistory"
         },
         {
-            $unwind: { path: "$watchHistory", preserveNullAndEmptyArrays: true }
-        },
-        {
-            $lookup: {
-                from: "videos",
-                localField: "watchHistory",
-                foreignField: "_id",
-                as: "watchHistory",
-                pipeline: [
+            $lookup:{
+                from:"videos",
+                localField:"watchHistory",
+                foreignField:"_id",
+                as:"watchHistory",
+                pipeline:[
                     {
-                        $lookup: {
-                            from: "users",
-                            localField: "owner",
-                            foreignField: "_id",
-                            as: "owner",
-                            pipeline: [
+                        $lookup:{
+                            from:"users",
+                            localField:"owner",
+                            foreignField:"_id",
+                            as:"owner",
+                            pipeline:[
                                 {
-                                    $project: {
-                                        fullName: 1,
-                                        username: 1,
-                                        avatar: 1
+                                    $project:{
+                                        fullName:1,
+                                        username:1,
+                                        avatar:1
                                     }
                                 }
                             ]
                         }
-                    },
-                    {
-                        $addFields: {
-                            owner: { $arrayElemAt: ["$owner", 0] }
-                        }
-                    },
-                    {
-                        $project: {
-                            title: 1,
-                            thumbnail: 1,
-                            owner: 1
+                    },{
+                        $addFields:{
+                            owner:{
+                                $first:"$owner"
+                            }
                         }
                     }
                 ]
+                
             }
-        },
-        {
-            $unwind: { path: "$watchHistory", preserveNullAndEmptyArrays: true }
+        },{
+            $unwind: "$watchHistory" 
         },
         {
             $group: {
@@ -507,16 +440,13 @@ const getUserWatchHIstory = asyncHandler(async (req, res) => {
                 watchHistory: { $push: "$watchHistory" }
             }
         }
-    ]);
+    ])
+    return res
+    .status(200)
+    .json( new apiResponse(200,user[0].watchHistory,"watch history fetched successfully"))
+})
 
-    return res.status(200).json(
-        new apiResponse(
-            200,
-            user.length > 0 ? user[0].watchHistory : [],
-            "Watch history fetched successfully"
-        )
-    );
-});
+
 
 
 export {

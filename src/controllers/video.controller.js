@@ -89,24 +89,76 @@ return res
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
-    //TODO: get video by id
-    const video=await Video.findById(videoId)
-    if(!video){
-        return res
-        .status(400)
-        .json(
-            new apiResponse(400,video,"Video not found")
-        )
-    }
-
-    return res
-    .status(200)
-    .json(
-        new apiResponse(200,video,"video got successfully")
+        const { videoId } = req.params
+        //TODO: get video by id
+        const video=await Video.findById(videoId).select("-_id ")
+        if(!video){
+            return res
+            .status(400)
+            .json(
+                new apiResponse(400,video,"Video not found")
+            )
+        }
+        const userHistory= await User.findByIdAndUpdate(req.user?._id,{
+            $addToSet:{
+                watchHistory:videoId
+            }
+        },
     )
 
-})
+        return res
+        .status(200)
+        .json(
+            new apiResponse(200,video,"video got successfully")
+        )
+
+    })
+
+
+
+// const getVideoById = asyncHandler(async (req, res) => {
+//         const { videoId } = req.params;
+    
+//         // Validate videoId format
+//         if (!mongoose.Types.ObjectId.isValid(videoId)) {
+//             throw new apiError(400, "Invalid video ID format");
+//         }
+    
+//         // Get video with owner details
+//         const video = await Video.findById(videoId)
+//             .populate({
+//                 path: 'owner',
+//                 select: 'username avatar' // Only include necessary fields
+//             })
+//             .select('-__v'); // Exclude version key instead of all _id
+    
+//         if (!video) {
+//             throw new apiError(404, "Video not found");
+//         }
+    
+//         // Update user's watch history if authenticated
+//         if (req.user?._id) {
+//             await User.findByIdAndUpdate(
+//                 req.user._id,
+//                 {
+//                     $addToSet: { // Prevents duplicates
+//                         watchHistory: {
+//                             video: videoId,
+//                             watchedAt: new Date()
+//                         }
+//                     }
+//                 },
+//                 { new: true }
+//             );
+    
+//             // Optional: Increment video views
+//             await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
+//         }
+    
+//         return res.status(200).json(
+//             new apiResponse(200, video, "Video fetched successfully")
+//         );
+//     });
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
