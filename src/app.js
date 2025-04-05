@@ -21,6 +21,7 @@ app.use(cookieParser())
  import subscriptionRouter from "./routes/subscription.routes.js"
  import commentRoute from "./routes/comment.routes.js"
  import playlistRouter from "./routes/playlist.routes.js"
+ import likeRouter from "./routes/like.routes.js"
 
 
 
@@ -31,6 +32,7 @@ app.use(cookieParser())
  app.use("/api/v1/subscriptions", subscriptionRouter)
  app.use("/api/v1/comments",commentRoute)
 app.use("/api/v1/playlist",playlistRouter)
+app.use("/api/v1/likes",likeRouter)
  
  //http://localhost:5000/api/v1/user/register
 export {app}

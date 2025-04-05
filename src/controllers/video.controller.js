@@ -20,9 +20,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     // Build filter query
     const filter = {};
     if (userId) filter.userId = userId;
-    if (query) filter.title = { $regex: query, $options: "i" };
-    console.log(typeof(filter));
-     // Case-insensitive search
+    if (query) filter.title = { $regex: query, $options: "i" };// Case-insensitive search
 
     // Sorting configuration
     const sort = { [sortBy]: sortType === "desc" ? -1 : 1 };
@@ -99,8 +97,8 @@ const getVideoById = asyncHandler(async (req, res) => {
                 new apiResponse(400,video,"Video not found")
             )
         }
-        const userHistory= await User.findByIdAndUpdate(req.user?._id,{
-            $addToSet:{
+        await User.findByIdAndUpdate(req.user?._id,{
+            $push:{
                 watchHistory:videoId
             }
         },

@@ -20,6 +20,6 @@ const likeSchema=new Schema(
         }
     }
           
-    ,[timestamps]
+    ,{timestamps:true}
 )
 export const Like=  mongoose.model("Like",likeSchema)
